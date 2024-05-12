@@ -3,8 +3,6 @@ import { useCallback, useEffect, useState } from "react";
 function App() {
   const [todos, setAllTodos] = useState(null);
   const [input, setInput] = useState("");
-  const [editTodoId, setEditTodoId] = useState(null);
-  const [editTodoName, setEditTodoName] = useState("");
   const [editTodo, setEditTodo] = useState({
     id: null,
     name: "",
