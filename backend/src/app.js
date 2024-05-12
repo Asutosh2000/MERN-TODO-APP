@@ -7,7 +7,8 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://mern-todo-app-zeta.vercel.app"],
+    origin: "http://localhost:3000",
+    credentials: true,
   })
 );
 app.use(express.static("public"));

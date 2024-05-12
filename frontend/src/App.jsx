@@ -5,6 +5,10 @@ function App() {
   const [input, setInput] = useState("");
   const [editTodoId, setEditTodoId] = useState(null);
   const [editTodoName, setEditTodoName] = useState("");
+  const [editTodo, setEditTodo] = useState({
+    id: null,
+    name: "",
+  });
 
   const getAllTodos = useCallback(async () => {
     const res = await fetch(`${import.meta.env.VITE_BASE_URI}/todos`);
@@ -42,7 +46,7 @@ function App() {
   };
 
   const updateTodo = async (id) => {
-    setEditTodoId(null);
+    setEditTodo((prev) => ({ ...prev, id: null }));
     try {
       await fetch(`${import.meta.env.VITE_BASE_URI}/todos/update/${id}`, {
         method: "PUT",
@@ -50,10 +54,10 @@ function App() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: editTodoName,
+          name: editTodo.name,
         }),
       });
-      setEditTodoName("");
+      setEditTodo((prev) => ({ ...prev, name: editTodo.name }));
       await getAllTodos();
     } catch (error) {
       console.log("Error", error);
@@ -85,7 +89,7 @@ function App() {
             .reverse()
             .map((todo) => (
               <div key={todo._id}>
-                {editTodoId === todo._id ? (
+                {editTodo.id === todo._id ? (
                   <input
                     type="text"
                     id="editTodo"
@@ -94,16 +98,19 @@ function App() {
                       padding: "0.5em",
                       background: "transparent",
                     }}
-                    value={editTodoName}
-                    onChange={(e) => setEditTodoName(e.target.value)}
+                    value={editTodo.name}
+                    onChange={(e) =>
+                      setEditTodo((prev) => ({ ...prev, name: e.target.value }))
+                    }
                   />
                 ) : (
                   <span className="todo_name">{todo.name}</span>
                 )}
                 <div style={{ display: "flex", gap: "10px", padding: "0" }}>
-                  {editTodoId == todo._id ? (
+                  {editTodo.id == todo._id ? (
                     <span
                       className="edit_btn"
+                      style={{ cursor: "pointer" }}
                       onClick={() => updateTodo(todo._id)}
                     >
                       <svg
@@ -128,9 +135,12 @@ function App() {
                   ) : (
                     <span
                       className="edit_btn"
+                      style={{ cursor: "pointer" }}
                       onClick={() => {
-                        setEditTodoName(todo.name);
-                        setEditTodoId(todo._id);
+                        setEditTodo({
+                          id: todo._id,
+                          name: todo.name,
+                        });
                       }}
                     >
                       &#9998;
