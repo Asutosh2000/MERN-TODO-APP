@@ -14,7 +14,8 @@ function App() {
     setAllTodos(data);
   }, []);
 
-  const addTodo = async () => {
+  const addTodo = async (e) => {
+    console.log(e);
     try {
       await fetch(`${import.meta.env.VITE_BASE_URI}/todos/new`, {
         method: "POST",
